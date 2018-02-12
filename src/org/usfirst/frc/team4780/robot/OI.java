@@ -4,11 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-/* import org.usfirst.frc.team4780.robot.commands.Climb; */
 import org.usfirst.frc.team4780.robot.commands.Elevate;
 import org.usfirst.frc.team4780.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4780.robot.commands.Intake;
-import org.usfirst.frc.team4780.robot.commands.SpitCube;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -47,11 +45,10 @@ double x;
 double y;
 
 Joystick joystick2 = new Joystick(1);
-
 public Button elevatorButton = new JoystickButton(joystick2, 2);
-public Button elevatorButton2 = new JoystickButton(joystick2, 2);
-public Button intakeButton = new JoystickButton(joystick2, 3);
-public Button intakeButton2 = new JoystickButton(joystick2, 3);
+public Button elevatorButton2 = new JoystickButton(joystick2, 4);
+public Button intakeButton = new JoystickButton(joystick2, 7);
+public Button intakeButton2 = new JoystickButton(joystick2, 8);
 public Button cubeSpark = new JoystickButton(joystick2, 3);
 
 

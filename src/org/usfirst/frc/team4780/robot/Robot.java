@@ -55,15 +55,14 @@ public class Robot extends IterativeRobot {
 		drivetrain = new DriveTrain();
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
-		elevatorButton = new JoystickButton(joystick2, 1);
-		elevatorButton2 = new JoystickButton(joystick2, 2);
-		intakeButton = new JoystickButton(joystick2, 1);
-		intakeButton2 = new JoystickButton(joystick2, 2);
+		elevatorButton = new JoystickButton(joystick2, 2);
+		elevatorButton2 = new JoystickButton(joystick2, 4);
+		intakeButton = new JoystickButton(joystick2, 7);
+		intakeButton2 = new JoystickButton(joystick2, 8);
 		cubeSpark = new Spark(RobotMap.cubeSparkPort);
 		elevatorSpark = new Spark(RobotMap.elevatorSparkPort);
 		newServo = new Servo(RobotMap.newServoPort);
 		chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		CameraServer camera = CameraServer.getInstance();
 		VideoSource usbCam = camera.startAutomaticCapture("cam0", 0);
@@ -151,9 +150,23 @@ public class Robot extends IterativeRobot {
 		{
 			cubeSpark.set(0.5);
 		}
-		else cubeSpark.set(0);
+	
+		if(joystick2.getRawButton(4))
+		{
+			elevatorSpark.set(0.5);
+		}
+		else elevatorSpark.set(0);
 		
+		if(joystick2.getRawButton(2))
+		{
+			elevatorSpark.set(-0.5);
+		}
+		else elevatorSpark.set(0);
+	
+	
 	}
+	
+
 
 	
 	
