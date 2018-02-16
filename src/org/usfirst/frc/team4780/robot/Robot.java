@@ -110,6 +110,20 @@ public class Robot extends IterativeRobot {
 		autonomousCommand = chooser.getSelected();
 //~rd	autonomousCommand = new (command goes here)
 // cubeSpark.set(0.5);
+	
+		// Add myTimer.start and myTimer.reset for timers in autonomousInit(this area) 
+		// and autonomousPeriodic(below this)
+		
+		/*
+		
+		// Reset timer to 0sec
+	    myTimer.reset();
+
+	    // Start timer
+	    myTimer.start();
+	    
+	    */
+		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -128,6 +142,20 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		
+		//ADD timer called myTimer.get for auto code below to work! ~rish
+		
+		/* // If is has been less than 15 seconds since autonomous started, drive forwards
+	    if(myTimer.get() < 15.0){
+	        DriveTrain.drive(0.5, 0.5);
+	    }
+
+	    // If more than 15 seconds have elapsed, stop driving and turn off the timer
+	    else {
+	        DriveTrain.drive(0.0, 0.0);
+	        myTimer.stop();
+	    }
+*/
 	}
 
 	@Override
