@@ -3,6 +3,7 @@ package org.usfirst.frc.team4780.robot;
 
 import org.usfirst.frc.team4780.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4780.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team4780.robot.subsystems.Elevator;
 import org.usfirst.frc.team4780.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.cscore.VideoSource;
@@ -29,8 +30,10 @@ public class Robot extends IterativeRobot {
 	
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	public static final Elevator elevator = new Elevator();
 	public static OI oi;
 	public static DriveTrain drivetrain;
+	public static Elevator Elevate;
 	public static Joystick joystick1;
 	public static Joystick joystick2;
 	public static Spark elevatorSpark;
@@ -55,10 +58,16 @@ public class Robot extends IterativeRobot {
 		drivetrain = new DriveTrain();
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
+	/* This code that is commented out underneath gets the current Y axis value of the secondary controller plugged
+	 * into driver station port 1 (because 0 is the driving joystick) and stores it in the variable speed or whatever 
+	 * other name is is given. Also it creates a new joystick object connected to port 1 in driver station ~Rish */
+		//	Joystick stick = new Joystick(1);
+		//	double speed = stick.getY ();
 		elevatorButton = new JoystickButton(joystick2, 2);
 		elevatorButton2 = new JoystickButton(joystick2, 4);
 		intakeButton = new JoystickButton(joystick2, 7);
 		intakeButton2 = new JoystickButton(joystick2, 8);
+		// elevator = new Elevator;
 		cubeSpark = new Spark(RobotMap.cubeSparkPort);
 		elevatorSpark = new Spark(RobotMap.elevatorSparkPort);
 		newServo = new Servo(RobotMap.newServoPort);
@@ -99,7 +108,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-
+//~rd	autonomousCommand = new (command goes here)
+// cubeSpark.set(0.5);
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -147,11 +157,12 @@ public class Robot extends IterativeRobot {
 	
 		
 		if(joystick2.getRawButton(1))
+		
 		{
 			cubeSpark.set(0.5);
 		}
 	
-		if(joystick2.getRawButton(4))
+		if(joystick2.getRawButton(3))
 		{
 			elevatorSpark.set(0.5);
 		}
@@ -162,8 +173,6 @@ public class Robot extends IterativeRobot {
 			elevatorSpark.set(-0.5);
 		}
 		else elevatorSpark.set(0);
-	
-	
 	}
 	
 

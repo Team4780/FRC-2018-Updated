@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team4780.robot.commands.Elevate;
 import org.usfirst.frc.team4780.robot.commands.ExampleCommand;
-import org.usfirst.frc.team4780.robot.commands.Intake;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -60,6 +59,7 @@ public OI(){
 	elevatorButton2.whileHeld(new ExampleCommand());
 	intakeButton.whenPressed(new ExampleCommand());
 	intakeButton2.whenPressed(new ExampleCommand());
+	
 	
 	}
 
