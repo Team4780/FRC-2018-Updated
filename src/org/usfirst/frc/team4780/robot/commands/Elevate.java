@@ -3,12 +3,10 @@ package org.usfirst.frc.team4780.robot.commands;
 
 
 import org.usfirst.frc.team4780.robot.Robot;
-
-// import org.usfirst.frc.team4780.robot.Robot;
-// import org.usfirst.frc.team4780.robot.subsystems.Elevator;
-
+import org.usfirst.frc.team4780.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Spark;
 
 /**
  *
@@ -27,7 +25,7 @@ public class Elevate extends Command {
     	
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-  		requires(Robot.elevator);
+//  		requires(Robot.elevator);
 		mySetpoint=setpoint;
   	}
   	
@@ -72,7 +70,7 @@ public class Elevate extends Command {
 		SmartDashboard.putBoolean("hall", Robot.elevator.isHallSet());
 	}
     */
-
+	
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return false;
