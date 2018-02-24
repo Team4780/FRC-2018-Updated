@@ -55,8 +55,6 @@ public Button cubeSpark = new JoystickButton(joystick2, 3);
 
 public OI(){
 	
-//	elevatorButton.whileHeld(new ExampleCommand());
-//	elevatorButton2.whileHeld(new ExampleCommand());
 	intakeButton.whenPressed(new ExampleCommand());
 	intakeButton2.whenPressed(new ExampleCommand());
 	

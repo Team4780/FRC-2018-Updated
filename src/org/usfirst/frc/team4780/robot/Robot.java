@@ -1,25 +1,28 @@
 
 package org.usfirst.frc.team4780.robot;
 
-import java.util.Timer;
-
-import org.usfirst.frc.team4780.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4780.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team4780.robot.subsystems.Elevator;
 import org.usfirst.frc.team4780.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.cscore.VideoSource;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 
 /**
@@ -29,25 +32,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot {	
 	
-
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	public static DriveTrain drivetrain;
+	public static Elevator elevateSpark;
+	public static Elevator elevator;
 	public static Joystick joystick1;
 	public static Joystick joystick2;
 	public static Spark elevatorSpark;
 	public static Spark cubeSpark;
 	public static Servo newServo;
-//	public static JoystickButton elevatorButton;
-//	public static JoystickButton elevatorButton2;
 	public static JoystickButton intakeButton;
 	public static JoystickButton intakeButton2;
-	public static DigitalOutput hallEffectSensorUp;
-	public static DigitalOutput hallEffectSensorDown;
+	public static DigitalInput hallEffectSensor;
+	public static SPI gyroSensor;
 	
-
+	double angleSetpoint = 0.0;
+    final double pGain = .006;  //propotional turning constant ~rd
+    
+    //gyro calibration constant, may need to be adjusted; 
+    //gyro value of 360 is set to correspond to one full revolution ~rd
+    final double voltsPerDegreePerSecond = .0128;
+    
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -57,23 +65,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+
+		
+		// boolean sensorValue = value;
+		ADXRS450_Gyro gyro= new ADXRS450_Gyro();
 		oi = new OI();
 		drivetrain = new DriveTrain();
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
 		intakeButton = new JoystickButton(joystick2, 7);
 		intakeButton2 = new JoystickButton(joystick2, 8);
-	//	hallEffectSensorUp = new DigitalOutput(RobotMap.newHallEffectPortUp);
-	//	hallEffectSensorDown = new DigitalOutput(RobotMap.newHallEffectPortDown);		
 		cubeSpark = new Spark(RobotMap.cubeSparkPort);
 		elevatorSpark = new Spark(RobotMap.elevatorSparkPort);
 		newServo = new Servo(RobotMap.newServoPort);
-		chooser.addDefault("Default Auto", new ExampleCommand());
+		hallEffectSensor = new DigitalInput(0);
 		SmartDashboard.putData("Auto mode", chooser);
 		CameraServer camera = CameraServer.getInstance();
 		VideoSource usbCam = camera.startAutomaticCapture("cam0", 0);
 		usbCam.setResolution(320,240); 
-		usbCam.setFPS(25);
+		usbCam.setFPS(30);
 	}
 
 	/**
@@ -105,9 +115,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-//~rd	autonomousCommand = new (command goes here)
-// cubeSpark.set(0.5);
-	
+//~rd	autonomousCommand = new (command goes here)	
 		// Add myTimer.start and myTimer.reset for timers in autonomousInit(this area) 
 		// and autonomousPeriodic(below this)
 		
@@ -140,7 +148,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 /*		
-		//ADD timer called myTimer.get for auto code below to work! ~rish
+		//ADD timer called myTimer.get for auto code below to work! ~RD
 		
 		 // If is has been less than 15 seconds since autonomous started, drive forwards
 	    if(myTimer.get() < 15.0){
@@ -172,39 +180,65 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
+	// Drive train for tele-op
 		
 		drivetrain.drive(joystick1);
+
+
+		
+	// Cube Spark/Intake "If-Then" Statements ~RD
 		
 		if(joystick2.getRawButton(3))
 		{
 			cubeSpark.set(-0.5);
 		}
 		else cubeSpark.set(0);
-	
 		
-		if(joystick2.getRawButton(1))
-		
-			
-			
+		if(joystick2.getRawButton(1))	
 			
 		{
 			cubeSpark.set(0.5);
 		}
+
 	
-		if(joystick2.getRawButton(2))
-		{
-			elevatorSpark.set(-1.0);
-		}
-		else elevatorSpark.set(0);
+		// Elevator Spark Y-Axis Control--Replaces Elevator Spark "If-Then" Statements ~RD
 		
-		if(joystick2.getRawButton(4))
+		elevatorSpark.set(joystick2.getY());
+	
+
+	
+	}
+	
+	public void operatorControl() {
+		
+		while (hallEffectSensor.get()) {
+			elevatorSpark.set(0);
+			
+			elevatorSpark.set(joystick2.getY());
+			
+			double turningValue;
+	//		gyroSensor.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
+		        while (isOperatorControl() && isEnabled()) {
+		            
+		            turningValue =  (angleSetpoint - ((Gyro) gyroSensor).getAngle())*pGain;
+		            if(joystick1.getY() <= 0)
+		            {
+		        	//forwards
+		        	DriveTrain.drive(joystick1.getY(), turningValue); 
+		            } else {
+		        	//backwards
+		        	DriveTrain.drive(joystick1.getY(), -turningValue); 
+		            }
+		        }
+		    }
+
+	
+		if(hallEffectSensor.DigitalInput(1));
 		{
-			elevatorSpark.set(1.0);
-			}
+		(elevatorSpark.set(0));
 		}
-	
-	
-	
+		else
+	}	
 	/**
 	 * This function is called periodically during test mode
 	 */
