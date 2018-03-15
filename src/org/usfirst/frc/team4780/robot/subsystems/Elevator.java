@@ -4,8 +4,8 @@ import org.usfirst.frc.team4780.robot.RobotMap;
 import org.usfirst.frc.team4780.robot.Robot;
 import org.usfirst.frc.team4780.robot.OI;
 import org.usfirst.frc.team4780.robot.commands.Elevate;
-import org.usfirst.frc.team4780.
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -47,7 +47,8 @@ public class Elevator extends Subsystem {
 //   	setDefaultCommand(new org.usfirst.frc.team4780.robot.commands.Elevate);
     }
 	 public boolean isHallSet() {
-		Robot.hallEffectSensor.(0);
+	
+		 DigitalInput.checkAnalogInputChannel(0);
 		 
 		// TODO Auto-generated method stub
 		return false;

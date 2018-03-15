@@ -7,17 +7,22 @@ import org.usfirst.frc.team4780.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,8 +39,33 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class Robot extends IterativeRobot {	
 	
+	
+	
+	/*
+	private static final double kAngleSetpoint = 0.0;
+	private static final double kP = 0.005; // propotional turning constant
+
+	// gyro calibration constant, may need to be adjusted;
+	// gyro value of 360 is set to correspond to one full revolution
+	private static final double kVoltsPerDegreePerSecond = 0.0128;
+
+	private static final int kLeftMotorPort = 0;
+	private static final int kRightMotorPort = 1;
+	private static final int kGyroPort = 0;
+	private static final int kJoystickPort = 0;
+
+	private DifferentialDrive m_myRobot
+			= new DifferentialDrive(new Spark(kLeftMotorPort),
+			new Spark(kRightMotorPort));
+	private AnalogGyro m_gyro = new AnalogGyro(kGyroPort);
+	private Joystick m_joystick = new Joystick(kJoystickPort);
+	
+	*/
+	
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
+	public static VictorSP leftVictor;
+	public static VictorSP rightVictor;
 	public static DriveTrain drivetrain;
 	public static Elevator elevateSpark;
 	public static Elevator elevator;
@@ -46,8 +76,12 @@ public class Robot extends IterativeRobot {
 	public static Servo newServo;
 	public static JoystickButton intakeButton;
 	public static JoystickButton intakeButton2;
-	public static DigitalInput hallEffectSensor;
+	DigitalInput hallEffectSensorUp; 
+	DigitalInput hallEffectSensorDown;
 	public static SPI gyroSensor;
+	public static Counter normalCounter;
+	
+	/*
 	
 	double angleSetpoint = 0.0;
     final double pGain = .006;  //propotional turning constant ~rd
@@ -55,7 +89,10 @@ public class Robot extends IterativeRobot {
     //gyro calibration constant, may need to be adjusted; 
     //gyro value of 360 is set to correspond to one full revolution ~rd
     final double voltsPerDegreePerSecond = .0128;
-    
+   
+	*/
+	
+	
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -63,9 +100,9 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	@Override
 	public void robotInit() {
 
+		// m_gyro.setSensitivity(kVoltsPerDegreePerSecond);
 		
 		// boolean sensorValue = value;
 		ADXRS450_Gyro gyro= new ADXRS450_Gyro();
@@ -73,12 +110,13 @@ public class Robot extends IterativeRobot {
 		drivetrain = new DriveTrain();
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
-		intakeButton = new JoystickButton(joystick2, 7);
-		intakeButton2 = new JoystickButton(joystick2, 8);
 		cubeSpark = new Spark(RobotMap.cubeSparkPort);
 		elevatorSpark = new Spark(RobotMap.elevatorSparkPort);
 		newServo = new Servo(RobotMap.newServoPort);
-		hallEffectSensor = new DigitalInput(0);
+		hallEffectSensorUp = new DigitalInput(0);
+		hallEffectSensorDown = new DigitalInput(1);
+		normalCounter = new Counter();
+        Joystick joystick2 = new Joystick(1);
 		SmartDashboard.putData("Auto mode", chooser);
 		CameraServer camera = CameraServer.getInstance();
 		VideoSource usbCam = camera.startAutomaticCapture("cam0", 0);
@@ -146,8 +184,16 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
+			leftVictor.set(1);
+			rightVictor.set(1);
+			Timer.delay(5);
+		
+		
+		
+		
 		Scheduler.getInstance().run();
-/*		
+	/*	
 		//ADD timer called myTimer.get for auto code below to work! ~RD
 		
 		 // If is has been less than 15 seconds since autonomous started, drive forwards
@@ -160,7 +206,8 @@ public class Robot extends IterativeRobot {
 	        DriveTrain.drive(0.0, 0.0);
 	        myTimer.stop();
 	    }
-*/
+	    */
+
 	}
 
 	@Override
@@ -171,6 +218,8 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		//limitValue = 0;
+		
 	}
 
 	/**
@@ -178,7 +227,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	
 		Scheduler.getInstance().run();
+		limit();
 		
 	// Drive train for tele-op
 		
@@ -186,35 +237,66 @@ public class Robot extends IterativeRobot {
 
 
 		
-	// Cube Spark/Intake "If-Then" Statements ~RD
+	// Cube Spark Intake/Outtake "If-Then" Statements ~RD
 		
 		if(joystick2.getRawButton(3))
 		{
-			cubeSpark.set(-0.5);
+			cubeSpark.set(-0.35);
 		}
 		else cubeSpark.set(0);
 		
 		if(joystick2.getRawButton(1))	
 			
 		{
-			cubeSpark.set(0.5);
+			cubeSpark.set(1);
 		}
-
 	
+
+
+		// Hall 
+	
+		/*
+		
+		int output = joystick2.getY();
+		if (hallEffectSensorUp.get())
+			output = Math.min(output, 0);
+		else if(hallEffectSensorDown.get())
+			output = Math.max(output, 0);
+		elevatorSpark.set(output);
+		
+		*/
+		
+		
 		// Elevator Spark Y-Axis Control--Replaces Elevator Spark "If-Then" Statements ~RD
 		
 		elevatorSpark.set(joystick2.getY());
 	
+		
+	
 
 	
 	}
+
+	 void limit() {
+		if(hallEffectSensorUp.get()) {
+			
+		}
+		else {
+			elevatorSpark.set(0);
+		}
+	}
+	
 	
 	public void operatorControl() {
-		
-		while (hallEffectSensor.get()) {
-			elevatorSpark.set(0);
+
+		}
+	
+
+		/*	
 			
-			elevatorSpark.set(joystick2.getY());
+			boolean direction = true;
+			boolean stopped = true;
+			
 			
 			double turningValue;
 	//		gyroSensor.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
@@ -227,24 +309,19 @@ public class Robot extends IterativeRobot {
 		        	DriveTrain.drive(joystick1.getY(), turningValue); 
 		            } else {
 		        	//backwards
-		        	DriveTrain.drive(joystick1.getY(), -turningValue); 
+		        	DriveTrain.drive(joystick1.getY(), -turningValue);
 		            }
 		        }
-		    }
+			}
+*/
 
-	
-		if(hallEffectSensor.DigitalInput(1));
-		{
-		(elevatorSpark.set(0));
-		}
-		else
-	}	
+
+
+
 	/**
 	 * This function is called periodically during test mode
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void testPeriodic() {
-		LiveWindow.run();
 	}
 }

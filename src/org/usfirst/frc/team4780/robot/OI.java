@@ -43,12 +43,15 @@ Joystick joystick = new Joystick(0);
 double x;
 double y;
 
+
+
 Joystick joystick2 = new Joystick(1);
 public Button elevatorButton = new JoystickButton(joystick2, 5);
 public Button elevatorButton2 = new JoystickButton(joystick2, 6);
 public Button intakeButton = new JoystickButton(joystick2, 7);
 public Button intakeButton2 = new JoystickButton(joystick2, 8);
 public Button cubeSpark = new JoystickButton(joystick2, 3);
+
 
 
 
@@ -73,4 +76,6 @@ public OI(){
 		public Joystick getJoystick2Value() {
 		return joystick2; 
 }	
+
+
 }

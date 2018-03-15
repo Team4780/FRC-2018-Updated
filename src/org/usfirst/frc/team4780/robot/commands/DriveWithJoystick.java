@@ -20,10 +20,9 @@ public class DriveWithJoystick extends Command {
 	}
 	
 	protected void execute() {
-		drivetrain.drive(Robot.oi.getJoystickValue());
+	drivetrain.drive(Robot.oi.getJoystickValue());
 		}
 	
-	@Override
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
 		return false;

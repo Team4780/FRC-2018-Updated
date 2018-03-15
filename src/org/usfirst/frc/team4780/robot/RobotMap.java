@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.SPI;
 
 /**
@@ -40,11 +41,17 @@ public class RobotMap {
 	Servo newServo = new Servo(5);
 	public static final int newServoPort = 5;
 
-	DigitalInput hallEffectSensor = new DigitalInput(0);
-	public static final int hallEffectSensorPort = 0;
+	DigitalInput hallEffectSensorUp = new DigitalInput(0);
+	public static final int hallEffectSensorUpPort = 0;
+	
+	DigitalInput hallEffectSensorDown = new DigitalInput(1);
+	public static final int hallEffectSensorDownPort = 1;
 	
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	public static final int ADXRS450_GyroPort = 0;
+	
+	Counter normalCounter = new Counter();
+	
 	
 	
 	
