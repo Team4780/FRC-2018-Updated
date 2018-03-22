@@ -30,12 +30,12 @@ public class DriveTrain extends Subsystem {
 		rightVictorSP.set(x+y);
 	}
 	public void auto() {
-		leftVictorSP.set(0.5);
-		rightVictorSP.set(-0.5);
-		Timer.delay(5);
+		leftVictorSP.set(-0.5);
+		rightVictorSP.set(0.5);
+		Timer.delay(10);
 		leftVictorSP.set(0);
 		rightVictorSP.set(0);
-		Timer.delay(10);
+		Timer.delay(5);
 	}
 
     public void initDefaultCommand() {

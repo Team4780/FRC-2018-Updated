@@ -2,7 +2,6 @@
 package org.usfirst.frc.team4780.robot;
 
 import org.usfirst.frc.team4780.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team4780.robot.subsystems.Elevator;
 import org.usfirst.frc.team4780.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.cscore.VideoSource;
@@ -10,7 +9,6 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,8 +20,6 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -67,19 +63,14 @@ public class Robot extends IterativeRobot {
 	public static VictorSP leftVictor;
 	public static VictorSP rightVictor;
 	public static DriveTrain drivetrain;
-	public static Elevator elevateSpark;
-	public static Elevator elevator;
 	public static Joystick joystick1;
 	public static Joystick joystick2;
 	public static Spark elevatorSpark;
 	public static Spark cubeSpark;
 	public static Servo newServo;
-	public static JoystickButton intakeButton;
-	public static JoystickButton intakeButton2;
 	DigitalInput hallEffectSensorUp; 
 	DigitalInput hallEffectSensorDown;
 	public static SPI gyroSensor;
-	public static Counter normalCounter;
 	
 	/*
 	
@@ -115,8 +106,6 @@ public class Robot extends IterativeRobot {
 		newServo = new Servo(RobotMap.newServoPort);
 		hallEffectSensorUp = new DigitalInput(0);
 		hallEffectSensorDown = new DigitalInput(1);
-		normalCounter = new Counter();
-        Joystick joystick2 = new Joystick(1);
 		SmartDashboard.putData("Auto mode", chooser);
 		CameraServer camera = CameraServer.getInstance();
 		VideoSource usbCam = camera.startAutomaticCapture("cam0", 0);
@@ -156,17 +145,6 @@ public class Robot extends IterativeRobot {
 //~rd	autonomousCommand = new (command goes here)	
 		// Add myTimer.start and myTimer.reset for timers in autonomousInit(this area) 
 		// and autonomousPeriodic(below this)
-		
-	/*	
-		
-		// Reset timer to 0sec
-	    Timer.reset();
-
-	    // Start timer
-	    Timer.start();
-	    
-	    */
-		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -210,6 +188,7 @@ public class Robot extends IterativeRobot {
 
 	}
 
+
 	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
@@ -218,7 +197,6 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		//limitValue = 0;
 		
 	}
 
@@ -229,19 +207,16 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 	
 		Scheduler.getInstance().run();
-		limit();
 		
-	// Drive train for tele-op
+	// Drivetrain for tele-op
 		
 		drivetrain.drive(joystick1);
-
-
 		
 	// Cube Spark Intake/Outtake "If-Then" Statements ~RD
 		
-		if(joystick2.getRawButton(3))
+		if(joystick2.getRawButton(2))
 		{
-			cubeSpark.set(-0.35);
+			cubeSpark.set(-0.5);
 		}
 		else cubeSpark.set(0);
 		
@@ -250,42 +225,41 @@ public class Robot extends IterativeRobot {
 		{
 			cubeSpark.set(1);
 		}
-	
-
-
-		// Hall 
-	
-		/*
 		
-		int output = joystick2.getY();
-		if (hallEffectSensorUp.get())
-			output = Math.min(output, 0);
-		else if(hallEffectSensorDown.get())
-			output = Math.max(output, 0);
-		elevatorSpark.set(output);
+		// Hall Effect Sensor Code
+	
 		
-		*/
+		boolean upTriggered = hallEffectSensorUp.get() == false;
+		boolean downTriggered = hallEffectSensorDown.get() == false;
+		double joystickYAxis = joystick2.getY();
+		
+		elevatorSpark.set(joystick2.getY());
+
+		 if (joystickYAxis<0 && downTriggered)
+		    {
+		        elevatorSpark.set(0);
+		    }
+		 	else
+		    {
+		    }
+		 
+		 if (joystickYAxis>0 && upTriggered)
+		    {
+		        elevatorSpark.set(0);
+		    }
+		    else
+		    {
+		    }
 		
 		
 		// Elevator Spark Y-Axis Control--Replaces Elevator Spark "If-Then" Statements ~RD
 		
-		elevatorSpark.set(joystick2.getY());
-	
-		
 	
 
 	
 	}
 
-	 void limit() {
-		if(hallEffectSensorUp.get()) {
-			
-		}
-		else {
-			elevatorSpark.set(0);
-		}
-	}
-	
+	 
 	
 	public void operatorControl() {
 
