@@ -27,7 +27,6 @@ public class Elevate extends Command {
         // eg. requires(chassis);
 //  		requires(Robot.elevator);
 		mySetpoint=setpoint;
-		requires(Robot.elevateSpark);
   	}
   	
   	

@@ -1,61 +1,41 @@
 package org.usfirst.frc.team4780.robot.subsystems;
 
 import org.usfirst.frc.team4780.robot.RobotMap;
-import org.usfirst.frc.team4780.robot.Robot;
-import org.usfirst.frc.team4780.robot.OI;
-import org.usfirst.frc.team4780.robot.commands.Elevate;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  *
  */
 public class Elevator extends Subsystem {
+//	private static Spark elevatorSpark;
+	public static double timer = 0;
 	
-	
-	
-
-	// Put methods for controlling this subsystem
+    // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	/*
-	
-	public void Elevate(Joystick stick) 
-		{
-		
-		double y = stick.getY();
-		
-		elevatorSpark.set(-y);
-		elevatorSpark.set(+y);
-		}
-	
-	*/
-	
-	
-	public void auto() {
-	
+	public Elevator() {
+//		elevatorSpark = new Spark(RobotMap.elevatorSparkPort);
 	}
-	public void initDefaultCommand() {
-		
-		
-		
+	
+	public static void auto() {
+/*		
+		if (Timer.getFPGATimestamp()<timer+5)
+		{
+		elevatorSpark.set(0.5);
+		}
+		else
+		{
+		elevatorSpark.set(0);
+		}
+	}
+*/
+	}
+    public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
-//   	setDefaultCommand(new org.usfirst.frc.team4780.robot.commands.Elevate);
     }
-	 public boolean isHallSet() {
-	
-		 DigitalInput.checkAnalogInputChannel(0);
-		 
-		// TODO Auto-generated method stub
-		return false;
-	}
-	public void nothing() {
-		// TODO Auto-generated method stub
-		
-	}
 }
-

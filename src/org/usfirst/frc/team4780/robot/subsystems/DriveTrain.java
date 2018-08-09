@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class DriveTrain extends Subsystem {
 	private VictorSP leftVictorSP;
 	private VictorSP rightVictorSP;
-
+	public double timer = 0;
+	
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
@@ -30,12 +31,17 @@ public class DriveTrain extends Subsystem {
 		rightVictorSP.set(x+y);
 	}
 	public void auto() {
-		leftVictorSP.set(-0.5);
-		rightVictorSP.set(0.5);
-		Timer.delay(10);
+		
+		if (Timer.getFPGATimestamp()<timer+5)
+		{
+		leftVictorSP.set(0.275);
+		rightVictorSP.set(-0.25); 
+		}
+		else
+		{
 		leftVictorSP.set(0);
 		rightVictorSP.set(0);
-		Timer.delay(5);
+		}
 	}
 
     public void initDefaultCommand() {

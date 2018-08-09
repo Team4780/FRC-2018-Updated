@@ -5,9 +5,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.SPI;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -38,6 +36,9 @@ public class RobotMap {
 	Spark elevatorSpark = new Spark(2);
 	public static final int elevatorSparkPort = 3;
 
+	Servo brakeServo = new Servo(4);
+	public static final int brakeServoPort = 4;
+	
 	Servo newServo = new Servo(5);
 	public static final int newServoPort = 5;
 
