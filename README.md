@@ -1,5 +1,5 @@
 # Team-4780-FRC-2018
-Code for our 2018 Season: Coded by Rishikesh Desai and Ryan Flanagan
+Code for our 2018 Season: Written by Rishikesh Desai 
 
 To learn more about what our team does, and what our code is used for, check out https://www.firstinspires.org/robotics/frc
 
